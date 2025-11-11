@@ -216,6 +216,11 @@
             transform: translateY(0);
         }
 
+        .submit-btn:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+        }
+
         footer {
             background: var(--primary);
             color: var(--text-light);
@@ -243,6 +248,26 @@
             margin: 30px 0;
         }
 
+        .success-message {
+            background: #d4edda;
+            color: #155724;
+            padding: 20px;
+            border-radius: 8px;
+            border: 2px solid #c3e6cb;
+            margin: 20px 0;
+            display: none;
+        }
+
+        .error-message {
+            background: #f8d7da;
+            color: #721c24;
+            padding: 20px;
+            border-radius: 8px;
+            border: 2px solid #f5c6cb;
+            margin: 20px 0;
+            display: none;
+        }
+
         @media (max-width: 768px) {
             header {
                 flex-direction: column;
@@ -268,6 +293,21 @@
             <img src="HROne_Logo.jpg" alt="HROne Logo">
             <h1>HROne — API Integration Client Intake Form</h1>
         </header>
+
+        <!-- Success/Error Messages -->
+        <div id="success-message" class="success-message">
+            <strong>✓ Success!</strong> Your integration request has been submitted successfully. Our team will contact you within 2-3 business days.
+        </div>
+        <div id="error-message" class="error-message">
+            <strong>✗ Error!</strong> <span id="error-text">There was an error submitting your form. Please try again.</span>
+        </div>
+
+        <!-- OPTION 1: Using Formspree - Replace YOUR_FORM_ID with your actual Formspree form ID -->
+        <!-- Get your form ID from: https://formspree.io -->
+        <form action="https://formspree.io/f/YOUR_FORM_ID" method="POST" id="intake-form">
+
+        <!-- OPTION 2: Using Google Apps Script (uncomment this and comment Option 1) -->
+        <!-- <form action="YOUR_GOOGLE_APPS_SCRIPT_URL" method="POST" id="intake-form"> -->
 
         <!-- Introduction -->
         <div class="card">
@@ -356,6 +396,8 @@
                     <label for="contact-email">Email Address <span class="required">*</span></label>
                     <input type="email" id="contact-email" name="contact-email" required
                         placeholder="email@company.com">
+                    <!-- This is your reply-to email for Formspree -->
+                    <input type="hidden" name="_replyto" id="contact-email-hidden">
                 </div>
                 <div class="form-group">
                     <label for="contact-phone">Phone Number <span class="required">*</span></label>
@@ -464,27 +506,27 @@
                 <h3 style="font-size: 1rem; margin-top: 15px; border: none;">Employee APIs</h3>
                 <div class="checkbox-group">
                     <div class="checkbox-item">
-                        <input type="checkbox" id="api-emp-info" name="api-scope" value="get-employee-info">
+                        <input type="checkbox" id="api-emp-info" name="api-scope[]" value="get-employee-info">
                         <label for="api-emp-info">Get Employee Information (Basic & Detailed)</label>
                     </div>
                     <div class="checkbox-item">
-                        <input type="checkbox" id="api-emp-add" name="api-scope" value="add-employee">
+                        <input type="checkbox" id="api-emp-add" name="api-scope[]" value="add-employee">
                         <label for="api-emp-add">Add / Update Employee</label>
                     </div>
                     <div class="checkbox-item">
-                        <input type="checkbox" id="api-emp-status" name="api-scope" value="employee-status">
+                        <input type="checkbox" id="api-emp-status" name="api-scope[]" value="employee-status">
                         <label for="api-emp-status">Get Employee Status, Type, Skills, Region, BU, Sub-dept</label>
                     </div>
                     <div class="checkbox-item">
-                        <input type="checkbox" id="api-emp-docs" name="api-scope" value="employee-documents">
+                        <input type="checkbox" id="api-emp-docs" name="api-scope[]" value="employee-documents">
                         <label for="api-emp-docs">Get Education, Work Experience, Document Type</label>
                     </div>
                     <div class="checkbox-item">
-                        <input type="checkbox" id="api-emp-joins" name="api-scope" value="upcoming-joins">
+                        <input type="checkbox" id="api-emp-joins" name="api-scope[]" value="upcoming-joins">
                         <label for="api-emp-joins">Get / Add Upcoming Joins</label>
                     </div>
                     <div class="checkbox-item">
-                        <input type="checkbox" id="api-emp-dynamic" name="api-scope" value="dynamic-fields">
+                        <input type="checkbox" id="api-emp-dynamic" name="api-scope[]" value="dynamic-fields">
                         <label for="api-emp-dynamic">Get / Update Dynamic Fields</label>
                     </div>
                 </div>
@@ -492,23 +534,23 @@
                 <h3 style="font-size: 1rem; margin-top: 20px; border: none;">Attendance APIs</h3>
                 <div class="checkbox-group">
                     <div class="checkbox-item">
-                        <input type="checkbox" id="api-att-calendar" name="api-scope" value="attendance-calendar">
+                        <input type="checkbox" id="api-att-calendar" name="api-scope[]" value="attendance-calendar">
                         <label for="api-att-calendar">Get Employee Attendance Calendar</label>
                     </div>
                     <div class="checkbox-item">
-                        <input type="checkbox" id="api-att-data" name="api-scope" value="attendance-data">
+                        <input type="checkbox" id="api-att-data" name="api-scope[]" value="attendance-data">
                         <label for="api-att-data">Get Attendance Data for Employee</label>
                     </div>
                     <div class="checkbox-item">
-                        <input type="checkbox" id="api-att-mark" name="api-scope" value="mark-attendance">
+                        <input type="checkbox" id="api-att-mark" name="api-scope[]" value="mark-attendance">
                         <label for="api-att-mark">Mark Attendance Status (Single / Bulk)</label>
                     </div>
                     <div class="checkbox-item">
-                        <input type="checkbox" id="api-att-mobile" name="api-scope" value="mobile-checkin">
+                        <input type="checkbox" id="api-att-mobile" name="api-scope[]" value="mobile-checkin">
                         <label for="api-att-mobile">Get Mobile Check-in Details</label>
                     </div>
                     <div class="checkbox-item">
-                        <input type="checkbox" id="api-att-onduty" name="api-scope" value="onduty">
+                        <input type="checkbox" id="api-att-onduty" name="api-scope[]" value="onduty">
                         <label for="api-att-onduty">Get On Duty Details / On Duty Request</label>
                     </div>
                 </div>
@@ -516,11 +558,11 @@
                 <h3 style="font-size: 1rem; margin-top: 20px; border: none;">Leave APIs</h3>
                 <div class="checkbox-group">
                     <div class="checkbox-item">
-                        <input type="checkbox" id="api-leave-request" name="api-scope" value="leave-request">
+                        <input type="checkbox" id="api-leave-request" name="api-scope[]" value="leave-request">
                         <label for="api-leave-request">Get Leave Request Report / Leave Request</label>
                     </div>
                     <div class="checkbox-item">
-                        <input type="checkbox" id="api-leave-balance" name="api-scope" value="leave-balance">
+                        <input type="checkbox" id="api-leave-balance" name="api-scope[]" value="leave-balance">
                         <label for="api-leave-balance">Get Leave Balance Report</label>
                     </div>
                 </div>
@@ -528,15 +570,15 @@
                 <h3 style="font-size: 1rem; margin-top: 20px; border: none;">Payroll APIs</h3>
                 <div class="checkbox-group">
                     <div class="checkbox-item">
-                        <input type="checkbox" id="api-payroll-days" name="api-scope" value="paid-days">
+                        <input type="checkbox" id="api-payroll-days" name="api-scope[]" value="paid-days">
                         <label for="api-payroll-days">Get Monthly Paid Days Detail</label>
                     </div>
                     <div class="checkbox-item">
-                        <input type="checkbox" id="api-payroll-salary" name="api-scope" value="salary-register">
+                        <input type="checkbox" id="api-payroll-salary" name="api-scope[]" value="salary-register">
                         <label for="api-payroll-salary">Get Salary Register Detail Report</label>
                     </div>
                     <div class="checkbox-item">
-                        <input type="checkbox" id="api-payroll-ctc" name="api-scope" value="employee-ctc">
+                        <input type="checkbox" id="api-payroll-ctc" name="api-scope[]" value="employee-ctc">
                         <label for="api-payroll-ctc">Get Employee CTC</label>
                     </div>
                 </div>
@@ -544,15 +586,15 @@
                 <h3 style="font-size: 1rem; margin-top: 20px; border: none;">Candidate APIs</h3>
                 <div class="checkbox-group">
                     <div class="checkbox-item">
-                        <input type="checkbox" id="api-candidate-details" name="api-scope" value="candidate-details">
+                        <input type="checkbox" id="api-candidate-details" name="api-scope[]" value="candidate-details">
                         <label for="api-candidate-details">Get Candidate Details Report</label>
                     </div>
                     <div class="checkbox-item">
-                        <input type="checkbox" id="api-candidate-add" name="api-scope" value="add-candidate">
+                        <input type="checkbox" id="api-candidate-add" name="api-scope[]" value="add-candidate">
                         <label for="api-candidate-add">Add Candidate</label>
                     </div>
                     <div class="checkbox-item">
-                        <input type="checkbox" id="api-candidate-docs" name="api-scope" value="candidate-documents">
+                        <input type="checkbox" id="api-candidate-docs" name="api-scope[]" value="candidate-documents">
                         <label for="api-candidate-docs">Get Candidate Document</label>
                     </div>
                 </div>
@@ -560,11 +602,11 @@
                 <h3 style="font-size: 1rem; margin-top: 20px; border: none;">Utility APIs</h3>
                 <div class="checkbox-group">
                     <div class="checkbox-item">
-                        <input type="checkbox" id="api-user-details" name="api-scope" value="user-details">
+                        <input type="checkbox" id="api-user-details" name="api-scope[]" value="user-details">
                         <label for="api-user-details">Get Logon User Details</label>
                     </div>
                     <div class="checkbox-item">
-                        <input type="checkbox" id="api-file-upload" name="api-scope" value="file-upload">
+                        <input type="checkbox" id="api-file-upload" name="api-scope[]" value="file-upload">
                         <label for="api-file-upload">Upload Base64 String File</label>
                     </div>
                 </div>
@@ -613,17 +655,17 @@
                 <label>Data Flow Direction <span class="required">*</span></label>
                 <div class="checkbox-group">
                     <div class="checkbox-item">
-                        <input type="checkbox" id="flow-hrone-to-system" name="data-flow"
+                        <input type="checkbox" id="flow-hrone-to-system" name="data-flow[]"
                             value="hrone-to-target-system" required>
                         <label for="flow-hrone-to-system">HROne → Target System (Read from HROne)</label>
                     </div>
                     <div class="checkbox-item">
-                        <input type="checkbox" id="flow-system-to-hrone" name="data-flow"
+                        <input type="checkbox" id="flow-system-to-hrone" name="data-flow[]"
                             value="target-system-to-hrone">
                         <label for="flow-system-to-hrone">Target System → HROne (Write to HROne)</label>
                     </div>
                     <div class="checkbox-item">
-                        <input type="checkbox" id="flow-bidirectional" name="data-flow" value="bidirectional">
+                        <input type="checkbox" id="flow-bidirectional" name="data-flow[]" value="bidirectional">
                         <label for="flow-bidirectional">Bi-directional (Two-way sync)</label>
                     </div>
                 </div>
@@ -687,23 +729,23 @@
                 <label>Compliance Standards <span class="required">*</span></label>
                 <div class="checkbox-group">
                     <div class="checkbox-item">
-                        <input type="checkbox" id="compliance-gdpr" name="compliance" value="gdpr">
+                        <input type="checkbox" id="compliance-gdpr" name="compliance[]" value="gdpr">
                         <label for="compliance-gdpr">GDPR (General Data Protection Regulation)</label>
                     </div>
                     <div class="checkbox-item">
-                        <input type="checkbox" id="compliance-iso" name="compliance" value="iso27001">
+                        <input type="checkbox" id="compliance-iso" name="compliance[]" value="iso27001">
                         <label for="compliance-iso">ISO 27001</label>
                     </div>
                     <div class="checkbox-item">
-                        <input type="checkbox" id="compliance-soc2" name="compliance" value="soc2">
+                        <input type="checkbox" id="compliance-soc2" name="compliance[]" value="soc2">
                         <label for="compliance-soc2">SOC 2</label>
                     </div>
                     <div class="checkbox-item">
-                        <input type="checkbox" id="compliance-hipaa" name="compliance" value="hipaa">
+                        <input type="checkbox" id="compliance-hipaa" name="compliance[]" value="hipaa">
                         <label for="compliance-hipaa">HIPAA</label>
                     </div>
                     <div class="checkbox-item">
-                        <input type="checkbox" id="compliance-none" name="compliance" value="none">
+                        <input type="checkbox" id="compliance-none" name="compliance[]" value="none">
                         <label for="compliance-none">No specific compliance requirements</label>
                     </div>
                 </div>
@@ -786,15 +828,15 @@
                 <label for="testing-environment">Testing Environment Requirements</label>
                 <div class="checkbox-group">
                     <div class="checkbox-item">
-                        <input type="checkbox" id="env-sandbox" name="environment" value="sandbox">
+                        <input type="checkbox" id="env-sandbox" name="environment[]" value="sandbox">
                         <label for="env-sandbox">Sandbox / Development Environment</label>
                     </div>
                     <div class="checkbox-item">
-                        <input type="checkbox" id="env-staging" name="environment" value="staging">
+                        <input type="checkbox" id="env-staging" name="environment[]" value="staging">
                         <label for="env-staging">Staging / UAT Environment</label>
                     </div>
                     <div class="checkbox-item">
-                        <input type="checkbox" id="env-production" name="environment" value="production">
+                        <input type="checkbox" id="env-production" name="environment[]" value="production">
                         <label for="env-production">Production Environment</label>
                     </div>
                 </div>
@@ -927,22 +969,22 @@
             <div class="form-group">
                 <div class="checkbox-group">
                     <div class="checkbox-item">
-                        <input type="checkbox" id="terms-acceptance" name="consent" value="terms-accepted" required>
+                        <input type="checkbox" id="terms-acceptance" name="consent[]" value="terms-accepted" required>
                         <label for="terms-acceptance">I acknowledge that I have read and understood the HROne API
                             pricing structure and terms of service <span class="required">*</span></label>
                     </div>
                     <div class="checkbox-item">
-                        <input type="checkbox" id="data-consent" name="consent" value="data-sharing" required>
+                        <input type="checkbox" id="data-consent" name="consent[]" value="data-sharing" required>
                         <label for="data-consent">I consent to HROne storing and processing this information for the
                             purpose of API integration setup <span class="required">*</span></label>
                     </div>
                     <div class="checkbox-item">
-                        <input type="checkbox" id="payment-acknowledgment" name="consent" value="payment-terms" required>
+                        <input type="checkbox" id="payment-acknowledgment" name="consent[]" value="payment-terms" required>
                         <label for="payment-acknowledgment">I understand that the one-time enablement fee of ₹15,000
                             is required to proceed with API access <span class="required">*</span></label>
                     </div>
                     <div class="checkbox-item">
-                        <input type="checkbox" id="advance-payment" name="consent" value="advance-payment">
+                        <input type="checkbox" id="advance-payment" name="consent[]" value="advance-payment">
                         <label for="advance-payment">I understand that custom API development requires 100% advance
                             payment (if applicable)</label>
                     </div>
@@ -981,8 +1023,15 @@
                 </div>
             </div>
 
-            <button type="submit" class="submit-btn" onclick="handleSubmit(event)">Submit Integration Request</button>
+            <!-- Formspree Honeypot (spam protection) -->
+            <input type="text" name="_gotcha" style="display:none" />
+            
+            <!-- Custom Subject Line for Email -->
+            <input type="hidden" name="_subject" value="New HROne API Integration Request" />
+
+            <button type="submit" class="submit-btn" id="submit-btn">Submit Integration Request</button>
         </div>
+        </form>
 
         <footer>
             © <span>2025</span> uneecops workplace solutions private limited. All rights reserved.<br>
@@ -991,9 +1040,24 @@
     </div>
 
     <script>
-        function handleSubmit(event) {
-            event.preventDefault();
+        // Set today's date as default for submission date
+        document.getElementById('submission-date').valueAsDate = new Date();
 
+        // Sync primary contact email to hidden reply-to field
+        document.getElementById('contact-email').addEventListener('input', function() {
+            document.getElementById('contact-email-hidden').value = this.value;
+        });
+
+        // Form submission handler
+        const form = document.getElementById('intake-form');
+        const submitBtn = document.getElementById('submit-btn');
+        const successMessage = document.getElementById('success-message');
+        const errorMessage = document.getElementById('error-message');
+
+        form.addEventListener('submit', async function(event) {
+            // Don't prevent default if using Formspree (let it handle submission)
+            // Only prevent default if using custom JavaScript submission
+            
             // Validate required fields
             const requiredFields = document.querySelectorAll('[required]');
             let allValid = true;
@@ -1012,26 +1076,32 @@
             });
 
             if (!allValid) {
-                alert('Please fill in all required fields marked with *');
-                return;
+                event.preventDefault();
+                errorMessage.querySelector('#error-text').textContent = 'Please fill in all required fields marked with *';
+                errorMessage.style.display = 'block';
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+                return false;
             }
 
-            // In a real implementation, this would send data to a server
-            alert('Thank you for submitting the HROne API Integration Intake Form!\n\nOur technical team will review your requirements and contact you within 2-3 business days.\n\nSubmission ID: INT-' + Date.now());
-
-            // Optional: Reset form
-            // document.querySelector('form').reset();
-        }
+            // If using Formspree, the form will submit naturally
+            // Formspree will handle the redirect to their thank you page
+            
+            // Disable submit button to prevent double submission
+            submitBtn.disabled = true;
+            submitBtn.textContent = 'Submitting...';
+        });
 
         // Reset border color on input
         document.querySelectorAll('input, select, textarea').forEach(element => {
             element.addEventListener('input', function () {
                 this.style.borderColor = '#ddd';
+                errorMessage.style.display = 'none';
             });
         });
 
-        // Set today's date as default for submission date
-        document.getElementById('submission-date').valueAsDate = new Date();
+        // Optional: Handle Formspree response (if they're on the same page)
+        // This won't work with standard Formspree as it redirects to their page
+        // But useful if using Ajax submission method
     </script>
 </body>
 
